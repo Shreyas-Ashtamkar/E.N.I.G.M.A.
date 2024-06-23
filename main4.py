@@ -37,7 +37,7 @@ MESSAGES_LIST = [
     # },
     {
         'role'    : 'user',
-        'content' : "K."
+        'content' : "Is this cool?"
     }
 ]
 
