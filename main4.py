@@ -38,7 +38,7 @@ MESSAGES_LIST = [
     {
         'role'    : 'user',
         'content' : "Is this cool?"
-    }
+    },
 ]
 
 # client = ollama.Client()
