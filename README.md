@@ -36,7 +36,10 @@ The `llama3` model facilitates seamless and natural conversation with users. It 
 5. **User Feedback:** The user receives a coherent, optimized response, enhancing the overall interaction experience.
 
 ## Flow of Code
-![Flow of Code - Tech Stack](<Technology Stack.png>)
+![Flow of Code - Tech Stack](<Flow of Code.png>)
+
+## Parts of System
+![Technology Stack](<System Diagram.png>)
 
 ## Benefits
 
