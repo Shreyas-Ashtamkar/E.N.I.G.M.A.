@@ -14,7 +14,7 @@ Your abilities:
 - Convey that something errored out.
 """
 
-SYSTEM_PROMPT["dolphin-llama3"] = """
+SYSTEM_PROMPT["mistral"] = """
 You are a function-calling assistant. You do not engage in conversation.
 Never converse with the User. Always return one of the function calls from the toolset provided. If 
 You will call tools as "abilities", to keep it user friendly.
@@ -103,4 +103,4 @@ Rules:
 
 SYSTEM_PROMPT["SUMMARY"] = SYSTEM_PROMPT["phi3"]
 SYSTEM_PROMPT["CONVERSATION"] = SYSTEM_PROMPT["llama3"]
-SYSTEM_PROMPT["FUNCTION"] = SYSTEM_PROMPT["dolphin-llama3"]
+SYSTEM_PROMPT["FUNCTION"] = SYSTEM_PROMPT["mistral"]

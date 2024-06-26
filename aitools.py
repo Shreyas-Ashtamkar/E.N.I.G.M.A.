@@ -1,6 +1,5 @@
 import ollama
 from types import SimpleNamespace
-from system_prompt import SYSTEM_PROMPT
 
 def _format_message(message, role='user'):
     return {
@@ -9,10 +8,11 @@ def _format_message(message, role='user'):
     }
 
 class _AI:
-    def __init__(self, model, prompt, **kwargs) -> None:
+    def __init__(self, model, prompt, json_response=False, **kwargs) -> None:
         self.model:str                  = model
         self.prompt:str                 = prompt
         self.default_response:str       = ""
+        self.json_response:bool         = json_response
         self.response_tester:function   = lambda x: True
         
         for arg, value in kwargs.items():
@@ -28,7 +28,8 @@ class _AI:
         
         assistant_response = ollama.chat(
             model    = self.model,
-            messages = [_format_message(self.prompt, 'system')] + message_history
+            messages = [_format_message(self.prompt, 'system')] + message_history,
+            format   = 'json' if self.json_response else '',
         )['message']['content'].strip()
         
         try:
@@ -45,22 +46,11 @@ class _AI:
         
         return self.chat([_format_message(message)])
 
-AI = SimpleNamespace(
-    summary = _AI(
-        model  = "phi3",
-        prompt = SYSTEM_PROMPT["SUMMARY"],
-        default_response = "NO_SUMMARY",
-        response_tester = lambda resp: ("Do this -" in resp)
-    ),
-    conversation = _AI(
-        model  = "llama3",
-        prompt = SYSTEM_PROMPT["CONVERSATION"],
-        default_response = "Hey sorry can you elaborate a bit more?"
-    ),
-    function = _AI(
-        model  = "mistral",
-        prompt = SYSTEM_PROMPT["FUNCTION"],
-        default_response = """{"tool":"conversation"}""",
-        response_tester = lambda resp: resp[0] == "{" and resp[-1] == "}"
-    )
-)
+class _Request:
+    VALID_TYPES = ["CONVERSATION", "FUNCTION"]
+    def __init__(self, type_="CONVERSATION", data_="") -> None:
+        if type_ not in _Request.VALID_TYPES:
+            type_ = "CONVERSATION"
+        self.type_ = type_
+        self.data_ = data_
+        
