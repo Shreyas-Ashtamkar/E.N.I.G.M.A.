@@ -32,6 +32,9 @@ The `llama3` model facilitates seamless and natural conversation with users. It 
 4. **Response Generation:** The result is then forwarded to the `llama3` model, which constructs a conversational response and delivers it back to the user.
 5. **User Feedback:** The user receives a coherent, optimized response, enhancing the overall interaction experience.
 
+## Flow of Code
+![Flow of Code - Tech Stack](<Technology Stack.png>)
+
 ## Benefits
 
 - **Optimized Interactions:** By leveraging specialized models, the system ensures accurate and efficient handling of user requests.
