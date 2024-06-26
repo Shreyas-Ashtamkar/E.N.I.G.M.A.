@@ -1,3 +1,6 @@
+<img src="Enigma_logo.jpeg" style="width:50em">
+</img>
+
 # E.N.I.G.M.A.
 
 *Expert Network for Intelligent Guidance and Multi-task Assistance*
