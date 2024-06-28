@@ -1,3 +1,6 @@
+from toolutils import Tool
+
+
 SYSTEM_PROMPT = dict()
 
 SYSTEM_PROMPT["llama3"] = """
@@ -12,7 +15,7 @@ Your abilities:
 - Get the current time at a given location.
 - Converse with the user.
 - Convey that something errored out.
-"""
+""".strip()
 
 SYSTEM_PROMPT["mistral"] = """
 You are a function-calling assistant. You do not engage in conversation.
@@ -54,16 +57,14 @@ You will call tools as "abilities", to keep it user friendly.
         - **message** (string, required): A user-friendly message notifying the user of the error.
         
 5. **tools_available**
-    - **Description:** Show the list of abilities.
-    - **Parameters:**
-        - **message** (string, required): A user-friendly message notifying the user of the error.
+    - **Description:** List down the capabilities (the toolset) of this chatbot, in a user friendly way.
         
 **Rules:**
 1. Do not engage in general conversation.
 2. Always return one of the functions below.
 3. If unable to perform a task, return an error via the error function.
 4. If user attempts normal conversation, call the conversation function without arguments.
-"""
+""".strip()
 
 SYSTEM_PROMPT["phi3"] = """
 You are a user specific-request summarization assistant.
@@ -78,7 +79,7 @@ Rules:
   - If you cannot summarize, or in any case if the user is conversaing without a request, return "NO_SUMMARY" as is.
   - Do not respond with any additional details or Support text. 
   - If you don't have the ability to complete a request, respond with "NO_SUMMARY"
-"""
+""".strip()
 
 # SYSTEM_PROMPT["mistral"] = """
 # You are a Chat Manager. 
@@ -99,8 +100,67 @@ Rules:
 # }
 
 # -- START --
-# """
+# """.strip()
+
+SYSTEM_PROMPT["mistral-dynamic"] = """
+You are a function-calling assistant. You do not engage in conversation.
+Never converse with the User. Always return one of the function calls from the toolset provided. If 
+You will call tools as "abilities", to keep it user friendly.
+
+**Task:**
+- Upon receiving a well-constructed prompt, determine the appropriate function from the toolset. 
+- If a required function is missing, report as error with the error function.
+
+**Function Call Format:**
+{tool_call_format}
+
+**Functions Available To You:**
+{tool_box}
+
+**Rules:**
+1. Do not engage in general conversation.
+2. Always return the best fit function, only from the toolset provided.
+3. If unable to perform a task, return an error via the error function.
+4. If user attempts normal conversation, call the conversation function without arguments.
+""".strip()
 
 SYSTEM_PROMPT["SUMMARY"] = SYSTEM_PROMPT["phi3"]
 SYSTEM_PROMPT["CONVERSATION"] = SYSTEM_PROMPT["llama3"]
-SYSTEM_PROMPT["FUNCTION"] = SYSTEM_PROMPT["mistral"]
+SYSTEM_PROMPT["FUNCTION"] = SYSTEM_PROMPT["mistral-dynamic"]
+
+if __name__ == "__main__":
+    Tool.create(
+        exec  = lambda : "",
+        fname = 'show_toolbox',
+        description = "List down the capabilities (the toolset) of this chatbot, in a user friendly way"
+    )
+
+    Tool.create(
+        exec  = lambda : "",
+        fname = 'conversation',
+        description = "Pass the conversation to another conversational AI"
+    )
+
+    Tool.create(
+        exec  = lambda : "",
+        fname = 'error',
+        description = "Pass the error message to be handled further",
+        message = Tool.parameter(type_="string", description="A user-friendly message notifying the user of the error")
+    )
+
+    Tool.create(
+        exec        = lambda location, unit: "",
+        fname       = "get_weather_data",
+        description = "Getting the weather-temperature data for a location in the chosen unit",
+        location    = Tool.parameter(type_='string', description="Location of the data"),
+        unit        = Tool.parameter(type_='string', description="Unit of temperature (celsius, fahrenheit). ", required=False)
+    )
+
+    Tool.create(
+        exec        = lambda location: "",
+        fname       = "get_time_data",
+        description = "Getting the time data for a location",
+        location    = Tool.parameter(type_='string', description="Location of the data")
+    )
+    
+    print(SYSTEM_PROMPT["FUNCTION"].format(tool_call_format=Tool.CALL_FORMAT, tool_box=Tool.box()))

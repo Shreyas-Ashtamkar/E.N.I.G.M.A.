@@ -47,11 +47,28 @@ from utils import *
 #     }
 # ]
 
+# MESSAGE_LIST = [
+#     {
+#         'role'    : 'user',
+#         'content' : "Book an uber cab for me to go home."
+#     },
+# ]
+
 MESSAGE_LIST = [
     {
-        'role'    : 'user',
-        'content' : "Book an uber cab for me to go home."
+        'role' : 'user',
+        'content':"Hey GPT! What's up?"
     },
+    {
+        'role' : 'asssitant',
+        'content':"Hello, Shreyas! I'm here and ready to help. How can I assist you today?"
+    },
+    {
+        'role' : 'user',
+        'content':"I'm trying to check how the weather will be today in the evening in Pune. Can you help?"
+    }
 ]
 
 process(MESSAGE_LIST)
+
+    

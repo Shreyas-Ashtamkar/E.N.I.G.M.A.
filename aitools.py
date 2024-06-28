@@ -14,12 +14,15 @@ class _AI:
         self.default_response:str       = ""
         self.json_response:bool         = json_response
         self.response_tester:function   = lambda x: True
+        self.options:dict               = {}
         
         for arg, value in kwargs.items():
             if arg == "default_response":
                 self.default_response = value
             elif arg == "response_tester":
                 self.response_tester = value
+            elif arg == 'options':
+                self.options = value
         
     def chat(self, message_history:list):
         '''Send a message history to llm and recieve response'''
@@ -30,6 +33,7 @@ class _AI:
             model    = self.model,
             messages = [_format_message(self.prompt, 'system')] + message_history,
             format   = 'json' if self.json_response else '',
+            options  = self.options
         )['message']['content'].strip()
         
         try:
@@ -53,4 +57,3 @@ class _Request:
             type_ = "CONVERSATION"
         self.type_ = type_
         self.data_ = data_
-        
