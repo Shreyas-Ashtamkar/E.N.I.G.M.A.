@@ -1,8 +1,8 @@
-from toolutils import Tool
-from aitools import _AI
+from utils.tools import Tool
+from utils.ai import _AI
 from types import SimpleNamespace
-from system_prompt import SYSTEM_PROMPT
-from app_tools import *
+from utils.system_prompts import SYSTEM_PROMPT
+from configs.tools import *
 
 DEBUG   = True
 VERBOSE = 2

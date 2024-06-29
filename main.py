@@ -1,12 +1,12 @@
-from utils import *
+from enigma import *
 
 MESSAGE_LIST = [
     {
-        'role'    : 'user',
-        'content' : "Book an uber cab for me to go home."
+        "role": "user",
+        "content": "What's the time in New York right now?"
     },
 ]
 
-chat_response = process(MESSAGE_LIST)
+app_response = process(MESSAGE_LIST)
 
-print(chat_response)
+print(app_response)

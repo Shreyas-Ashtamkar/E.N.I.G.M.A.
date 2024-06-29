@@ -1,5 +1,4 @@
 import ollama
-from types import SimpleNamespace
 
 def _format_message(message, role='user'):
     return {

@@ -21,8 +21,9 @@ def get_weather_data(location:str, unit:str="Celcius", **kwargs):
 def generate_image(prompt:str, **kwargs):
     return prompt
 
-def get_time_data(location, **kwargs):
+def get_time_data(location, format="12H", **kwargs):
     print("CALLED: get_time_data","\nPASSED :", location)
+    return "7:30 AM"
 
 
 if __name__ == "__main__":

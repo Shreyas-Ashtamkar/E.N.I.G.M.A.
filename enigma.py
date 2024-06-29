@@ -1,8 +1,8 @@
 import json
-from aitools import _AI, _Request, _format_message
-from toolutils import Tool
+from utils.ai import _AI, _Request, _format_message
+from utils.tools import Tool
 
-from app_configs import *
+from configs.config import *
 
 def _stringify_conversation(conversation):
     string_conversation = ""
