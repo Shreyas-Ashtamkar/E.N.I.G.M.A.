@@ -1,6 +1,6 @@
 import json
 from utils.ai import _AI, _Request, _format_message
-from utils.tools import Tool
+from utils.Tool import Tool
 
 from configs.config import *
 
@@ -17,6 +17,7 @@ def _stringify_conversation(conversation):
 
 def _get_summary(conversation:list[dict[str,str]]=None) -> str:
     conversation = _stringify_conversation(conversation)
+    if len(conversation) < 1: return "NO_SUMMARY"
     summary:str = AI.summary.simple_chat(conversation).strip()
     print2("\n----------_get_summary called----------")
     print3(summary)
@@ -25,11 +26,15 @@ def _get_summary(conversation:list[dict[str,str]]=None) -> str:
 
 def _get_request(summary:str) -> _Request:
     request = _Request(type_="CONVERSATION", data_="")
-    if "Do this - " in summary:
+    
+    if "NO_SUMMARY" in summary:
+        request.type_ = "CONVERSATION"
+    elif "Do this - " in summary:
         request.type_ = "FUNCTION"
         request.data_ = summary.split("\n")[0][10:]
+    
     print2("\n------------_get_request called-------------")
-    print2(f"Type:{request.type_} \nData:'{request.data_}'")
+    print3(f"Type:{request.type_} \nData:'{request.data_}'")
     return request
         
 
@@ -79,14 +84,16 @@ def process(conversation:list[dict[str:str]], retry=0):
             tool_conversation = [_format_message(f"{summary}", role='user'), _format_message(f"{tool_response}", role='user')]
             chat_response = _response_conversation(tool_conversation)
         else:
-            chat_response = _continue_conversation(conversation)
+            if len(conversation) > 0:
+                chat_response = _continue_conversation(conversation)
+            else:
+                chat_response = _continue_conversation([_format_message("Introduce yourself in a fun way in a single sentence.", "user")])
     except Exception as e: 
-        if retry < 3:
+        if retry < MAX_RETRY:
             print("------------- Retry -------------")
             chat_response = process(conversation, retry+1)
         else:
             chat_response = _response_conversation(e.__str__())
-        
     return chat_response
 
 

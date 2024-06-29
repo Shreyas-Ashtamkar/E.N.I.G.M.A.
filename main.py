@@ -1,11 +1,6 @@
 from enigma import *
 
-MESSAGE_LIST = [
-    {
-        "role": "user",
-        "content": "What's the time in New York right now?"
-    },
-]
+MESSAGE_LIST = []
 
 app_response = process(MESSAGE_LIST)
 

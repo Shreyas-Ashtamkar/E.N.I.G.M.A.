@@ -1,11 +1,11 @@
-from utils.tools import Tool
+from utils.Tool import Tool
 from utils.ai import _AI
 from types import SimpleNamespace
 from utils.system_prompts import SYSTEM_PROMPT
 from configs.tools import *
 
 DEBUG   = True
-VERBOSE = 2
+VERBOSE = 1
 MAX_RETRY = 2
 
 dummy_print = lambda *y, **z: ""

@@ -1,4 +1,4 @@
-from utils.tools import Tool
+from utils.Tool import Tool
 
 
 SYSTEM_PROMPT = dict()
@@ -46,7 +46,8 @@ Rules:
 """.strip()
 
 SYSTEM_PROMPT["FUNCTION"] = """
-You are a function-calling assistant. You do not engage in conversation. Never converse with the User. Always return one of the function calls from the toolset provided. Call tools as "abilities" to keep it user-friendly.
+You are a function-calling assistant.
+Your task is to ALWAYS return ONLY ONE of the function calls from the toolset provided.
 
 **Task:**
 - Upon receiving a well-constructed prompt, determine the appropriate function from the toolset.
