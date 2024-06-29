@@ -33,7 +33,7 @@ Tool.create(
     exec  = hint_error,
     fname = 'error',
     description = "Pass the error message to be handled further",
-    message = Tool.parameter(type_="string", description="A user-friendly message notifying the user of the error")
+    error_message = Tool.parameter(type_="string", description="A user-friendly message notifying the user of the error")
 )
 
 Tool.create(
@@ -73,5 +73,10 @@ AI = SimpleNamespace(
         options = {
             'temperature' : 1
         }
-    )
+    ),
+    responder = _AI(
+        model  = "llama3",
+        prompt = SYSTEM_PROMPT["RESPONDER"],
+        default_response = "I'm sorry there's some internal errors, can we please chat later?"
+    ),
 )

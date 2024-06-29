@@ -1,16 +1,22 @@
 import json
 
 def hint_conversation(**kwargs):
-    print("CALLED: hint_conversation","\nPASSED :", kwargs)
+    print(f"CALLED: hint_conversation\nPASSED :{kwargs}")
+    return f"Can't do that yet"
 
 def hint_error(error_message, **kwargs):
-    print("CALLED: hint_error","\nPASSED :", error_message)
+    print(f"CALLED: hint_error\nPASSED :{error_message}")
     return f"ERROR : {error_message}"
 
 def get_weather_data(location:str, unit:str="Celcius", **kwargs):
-    print("CALLED: get_weather_data","\nPASSED : location=", location, ", unit=", unit)
-    
-    return f"The current temperature in {location.capitalize()} is 50 {unit.capitalize()}"
+    print(f"CALLED: get_weather_data\nPASSED : location={location}, unit={unit}")
+    weather_data = {
+        "temperature-high" : f"30 {unit}",
+        "temperature-low"  : f"20 {unit}",
+        "sky": "Clear",
+        "rains" : "Slight Possibility"
+    }
+    return json.dumps(weather_data)
 
 def generate_image(prompt:str, **kwargs):
     return prompt

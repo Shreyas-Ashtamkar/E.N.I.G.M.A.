@@ -44,75 +44,54 @@ def _get_tool(task:str):
     return tool_details
 
 
-def _run_tool(tool_details:dict, retry=0):
+def _run_tool(tool_details:dict):
     tool_name:Tool   = tool_details.get('tool')
     tool_kwargs:dict = tool_details.get('tool_kwargs')
-    try:
-        tool = Tool.get(tool_name)
-        print2("\n------------_run_tool called-------------")
-        tool_response = tool.exec(**tool_kwargs)
-    except Exception as e:
-        if retry < MAX_RETRY:
-            tool_response = _run_tool(tool_details, retry+1)
-        tool_response = hint_error(error_message=e.__str__())
+    tool = Tool.get(tool_name)
+    print2("\n------------_run_tool called-------------")
+    tool_response = tool.exec(**tool_kwargs)
+    print3(tool_response)
     return tool_response
 
+def _response_conversation(conversation:list[dict[str:str]]) -> str:
+    print2("\n------------_response_conversation called-------------")
+    chat_response = AI.responder.chat(conversation)
+    print3(chat_response)
+    return chat_response
+
     
-def _continue_conversation(conversation:list[dict[str:str]]):
+def _continue_conversation(conversation:list[dict[str:str]]) -> str:
     print2("\n------------_continue_conversation called-------------")
-    print(conversation)
-    return AI.conversation.chat(conversation)
+    chat_response = AI.conversation.chat(conversation)
+    print3(chat_response)
+    return chat_response
 
 
-# def process(conversation):
-#     summary = _get_summary(conversation)
-#     if "NO_SUMMARY" in summary:
-#         message = continue_conversation(conversation)
-#         print("message :", message)
-#     else:
-#         task = summary.split("\n")[0][10:]
-#         print("task :", task)
+def process(conversation:list[dict[str:str]], retry=0):
+    try:
+        summary = _get_summary(conversation)
+        request = _get_request(summary)
+        chat_response = ""
+        if request.type_ == "FUNCTION":
+            # Run the tool
+            tool_details  = _get_tool(request.data_)
+            tool_response = _run_tool(tool_details)
+            tool_conversation = [_format_message(f"{summary}", role='user'), _format_message(f"{tool_response}", role='user')]
+            chat_response = _response_conversation(tool_conversation)
+        else:
+            chat_response = _continue_conversation(conversation)
+    except Exception as e: 
+        if retry < 3:
+            print("------------- Retry -------------")
+            chat_response = process(conversation, retry+1)
+        else:
+            chat_response = _response_conversation(e.__str__())
         
-#         tool_details = _get_tool(task)
-#         if tool_details['tool'] == 'conversation':
-#             pass
-#         elif tool_details['tool'] == 'error':
-#             conversation.append({
-#                 'role' : 'system',
-#                 'content': tool_details['tool_kwargs'].get("message")
-#             })
-#         else:
-#             conversation.append({
-#                 'role' : 'system',
-#                 'content' : f'Called tool - {tool_details["tool"]}'
-#             })
-
-#         print("message :", message)
-#         message = continue_conversation(conversation)
-
-
-def process(conversation:list[dict[str:str]]):
-    summary = _get_summary(conversation)
-    
-    request = _get_request(summary)
-    
-    if request.type_ == "FUNCTION":
-        # Run the tool
-        tool_details  = _get_tool(request.data_)
-        tool_response = _run_tool(tool_details)
-        
-        conversation.append(_format_message("Inform the user - "+tool_response, role='system'))
-    
-    # Continue Conversation
-    print("\nContinue Conversation")
-    chat_response = _continue_conversation(conversation)
-    print(chat_response)
-    
-    
+    return chat_response
 
 
 if __name__ == "__main__":
-    process([
+    chat_response = process([
         {
             'role' : 'user',
             'content':"Hey GPT! What's up?"
@@ -126,3 +105,5 @@ if __name__ == "__main__":
             'content':"I'm trying to check how the weather will be today in the evening in Pune. Can you help?"
         }
     ])
+    
+    print(chat_response)
