@@ -4,7 +4,8 @@ from utils.Tool import Tool
 
 from configs.config import *
 
-def _stringify_conversation(conversation):
+def _stringify_conversation(conversation:list):
+    conversation = conversation[::-1][:3][::-1]
     string_conversation = ""
     for message in conversation:
         role, content = message['role'], message['content']
@@ -17,7 +18,7 @@ def _stringify_conversation(conversation):
 
 def _get_summary(conversation:list[dict[str,str]]=None) -> str:
     conversation = _stringify_conversation(conversation)
-    if len(conversation) < 1: return "NO_SUMMARY"
+    if len(conversation) < 1: return "NO_SPECIFIC_REQUEST"
     summary:str = AI.summary.simple_chat(conversation).strip()
     print2("\n----------_get_summary called----------")
     print3(summary)
@@ -27,7 +28,7 @@ def _get_summary(conversation:list[dict[str,str]]=None) -> str:
 def _get_request(summary:str) -> _Request:
     request = _Request(type_="CONVERSATION", data_="")
     
-    if "NO_SUMMARY" in summary:
+    if "NO_SPECIFIC_REQUEST" in summary:
         request.type_ = "CONVERSATION"
     elif "Do this - " in summary:
         request.type_ = "FUNCTION"
@@ -72,7 +73,7 @@ def _continue_conversation(conversation:list[dict[str:str]]) -> str:
     return chat_response
 
 
-def process(conversation:list[dict[str:str]], retry=0):
+def process(conversation:list[dict[str:str]], retry=0, stream=False):
     try:
         summary = _get_summary(conversation)
         request = _get_request(summary)

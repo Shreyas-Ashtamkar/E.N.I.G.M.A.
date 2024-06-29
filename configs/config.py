@@ -5,7 +5,7 @@ from utils.system_prompts import SYSTEM_PROMPT
 from configs.tools import *
 
 DEBUG   = True
-VERBOSE = 1
+VERBOSE = 3
 MAX_RETRY = 2
 
 dummy_print = lambda *y, **z: ""
@@ -61,8 +61,11 @@ AI = SimpleNamespace(
     summary = _AI(
         model  = "phi3",
         prompt = SYSTEM_PROMPT["SUMMARY"],
-        default_response = "NO_SUMMARY",
-        response_tester = lambda resp: ("Do this -" in resp)
+        default_response = "NO_SPECIFIC_REQUEST",
+        response_tester = lambda resp: ("Do this -" in resp),
+        options = {
+            'temperature' : 1
+        }
     ),
     tool = _AI(
         model  = "mistral",
