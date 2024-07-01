@@ -19,7 +19,7 @@ def _stringify_conversation(conversation:list):
 def _get_summary(conversation:list[dict[str,str]]=None) -> str:
     conversation = _stringify_conversation(conversation)
     if len(conversation) < 1: return "NO_SPECIFIC_REQUEST"
-    summary:str = AI.summary.simple_chat(conversation).strip()
+    summary:str = AI.summary.simple_chat(conversation).split("\n")[0].strip()
     print2("\n----------_get_summary called----------")
     print3(summary)
     return summary
@@ -52,7 +52,7 @@ def _get_tool(task:str):
 
 def _run_tool(tool_details:dict):
     tool_name:Tool   = tool_details.get('tool')
-    tool_kwargs:dict = tool_details.get('tool_kwargs')
+    tool_kwargs:dict = tool_details.get('tool_kwargs') or {}
     tool = Tool.get(tool_name)
     print2("\n------------_run_tool called-------------")
     tool_response = tool.exec(**tool_kwargs)
@@ -83,8 +83,11 @@ def process(conversation:list[dict[str:str]], retry=0, stream=False):
             # Run the tool
             tool_details  = _get_tool(request.data_)
             tool_response = _run_tool(tool_details)
-            tool_conversation = [_format_message(f"{summary}", role='user'), _format_message(f"{tool_response}", role='user')]
-            chat_response = _response_conversation(tool_conversation)
+            if "IMAGE : " in tool_response:
+                chat_response = tool_response[8:]
+            else:
+                tool_conversation = [_format_message(f"{summary}", role='user'), _format_message(f"{tool_response}", role='user')]
+                chat_response = _response_conversation(tool_conversation)
         else:
             if len(conversation) > 0:
                 chat_response = _continue_conversation(conversation)
@@ -103,16 +106,8 @@ if __name__ == "__main__":
     chat_response = process([
         {
             'role' : 'user',
-            'content':"Hey GPT! What's up?"
+            'content':"Generate an image of a playful baby elephant."
         },
-        {
-            'role' : 'assistant',
-            'content':"Hello, Shreyas! I'm here and ready to help. How can I assist you today?"
-        },
-        {
-            'role' : 'user',
-            'content':"I'm trying to check how the weather will be today in the evening in Pune. Can you help?"
-        }
     ])
     
     print(chat_response)

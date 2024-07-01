@@ -3,6 +3,7 @@ from utils.ai import _AI
 from types import SimpleNamespace
 from utils.system_prompts import SYSTEM_PROMPT
 from configs.tools import *
+from os import system
 
 DEBUG   = True
 VERBOSE = 3
@@ -13,6 +14,7 @@ print1 = print if DEBUG else dummy_print
 print2 = print1 if VERBOSE > 1 else dummy_print
 print3 = print1 if VERBOSE > 2 else dummy_print
 print4 = print1 if VERBOSE > 3 else dummy_print
+cls = lambda : system("cls") if DEBUG else dummy_print
 
 def show_toolbox(**kwargs):
     print("CALLED: show_toolbox","\nPASSED :", kwargs)
@@ -21,19 +23,6 @@ Tool.create(
     exec  = show_toolbox,
     fname = 'show_toolbox',
     description = "List down the capabilities (the toolset) of this chatbot, in a user friendly way"
-)
-
-Tool.create(
-    exec  = hint_conversation,
-    fname = 'conversation',
-    description = "Pass the conversation to another conversational AI"
-)
-
-Tool.create(
-    exec  = hint_error,
-    fname = 'error',
-    description = "Pass the error message to be handled further",
-    error_message = Tool.parameter(type_="string", description="A user-friendly message notifying the user of the error")
 )
 
 Tool.create(
@@ -49,6 +38,27 @@ Tool.create(
     fname       = "get_time_data",
     description = "Getting the time data for a location",
     location    = Tool.parameter(type_='string', description="Location of the data")
+)
+
+Tool.create(
+    exec        = generate_image,
+    fname       = "generate_image",
+    description = "Create images based on the user-provided prompt.",
+    prompt      = Tool.parameter(type_='string', description="The prompt provided by the user on basis of which the image will be created.")
+)
+
+Tool.create(
+    exec  = hint_conversation,
+    fname = 'conversation',
+    description = "Pass the conversation to another conversational AI",
+    message = Tool.parameter(type_="string", description="A user-friendly message.")
+)
+
+Tool.create(
+    exec  = hint_error,
+    fname = 'error',
+    description = "Pass the error message to be handled further",
+    error_message = Tool.parameter(type_="string", description="A user-friendly message notifying the user of the error")
 )
 
 

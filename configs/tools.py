@@ -18,8 +18,12 @@ def get_weather_data(location:str, unit:str="Celcius", **kwargs):
     }
     return json.dumps(weather_data)
 
+_IMAGE_GENERATION_URL = "IMAGE : ![{prompt}](https://image.pollinations.ai/prompt/{prompt}?width=1600&height=1200&nologo=poll&nofeed=yes)"
+
 def generate_image(prompt:str, **kwargs):
-    return prompt
+    image_path = _IMAGE_GENERATION_URL.format(prompt=prompt.replace(" ", "%20"))
+    return image_path
+    # return _IMAGE_GENERATION_OUTPUT.format(img_path=image_path, img_prompt=prompt)
 
 def get_time_data(location, format="12H", **kwargs):
     print("CALLED: get_time_data","\nPASSED :", location)
@@ -27,4 +31,5 @@ def get_time_data(location, format="12H", **kwargs):
 
 
 if __name__ == "__main__":
-    generate_image("A tree on a moon")
+    op = generate_image("A tree on a moon")
+    print(op)

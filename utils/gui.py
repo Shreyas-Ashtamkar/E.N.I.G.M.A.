@@ -1,5 +1,6 @@
 from types import FunctionType
 import streamlit as st
+from configs.config import print2, cls
 
 def _ai(request:str):
     reply = "No AI set"
@@ -11,9 +12,13 @@ async def _ai_stream(request:str):
         content = chunk
         yield content
 
+def restart_chat():
+    if "chat_history" in st.session_state:
+        init_chat()
 
 def init_chat():
-    print("Called init_chat")
+    cls()
+    print2("Called init_chat")
     st.session_state["chat_history"] = [{
         'role': "assistant",
         # 'content': ollama_fetch_response(model="phi3", stream=False),
