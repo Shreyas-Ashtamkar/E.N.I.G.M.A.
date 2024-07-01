@@ -1,5 +1,5 @@
-from gui import init_chatbox, new_message, get_messages, show_message, ai_reply
-import streamlit as st
+import enigma
+from utils.gui import st, init_chatbox, new_message, get_messages, show_message, ai_reply
 
 st.title("E.N.I.G.M.A")
 st.caption("Expert Network for Intelligent Guidance and Multi-task Assistance")
@@ -14,12 +14,4 @@ with message_box:
 
     if prompt := messages_container.chat_input(f"Type your message"):
         new_message(msg=prompt)
-        ai_reply(container=message_box)
-
-# from enigma import *
-
-# MESSAGE_LIST = []
-
-# app_response = process(MESSAGE_LIST)
-
-# print(app_response)
+        ai_reply(container=message_box, ai=enigma.process)

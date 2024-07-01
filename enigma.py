@@ -61,6 +61,7 @@ def _run_tool(tool_details:dict):
 
 def _response_conversation(conversation:list[dict[str:str]]) -> str:
     print2("\n------------_response_conversation called-------------")
+    print3(conversation)
     chat_response = AI.responder.chat(conversation)
     print3(chat_response)
     return chat_response

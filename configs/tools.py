@@ -2,7 +2,7 @@ import json
 
 def hint_conversation(**kwargs):
     print(f"CALLED: hint_conversation\nPASSED :{kwargs}")
-    return f"Can't do that yet"
+    return f"Okay, let's talk."
 
 def hint_error(error_message, **kwargs):
     print(f"CALLED: hint_error\nPASSED :{error_message}")
