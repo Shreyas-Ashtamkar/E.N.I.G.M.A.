@@ -40,8 +40,8 @@ You need to convert the extracted request to the format: "Do this - " prompt fro
 This should not include everything the user has asked for, just the very last, context specific request, in the conversation.
 
 Output Format:
+  - If task is creation or generation of image - "Create an image with the prompt - {task}."
   - If specific task - "Do this - {task}."
-  - If creation or generation of image - "Create an image with the prompt - {task}."
   - If no specific task - "NO_SPECIFIC_TASK"
   - If conversation - "CONVERSATION"
 

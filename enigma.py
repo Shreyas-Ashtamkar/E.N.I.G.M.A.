@@ -18,7 +18,7 @@ def _stringify_conversation(conversation:list):
 
 def _get_summary(conversation:list[dict[str,str]]=None) -> str:
     conversation = _stringify_conversation(conversation)
-    if len(conversation) < 1: return "NO_SPECIFIC_REQUEST"
+    if len(conversation) < 1: return "NO_SPECIFIC_TASK"
     summary:str = AI.summary.simple_chat(conversation).split("\n")[0].strip()
     print2("\n----------_get_summary called----------")
     print3(summary)
@@ -28,7 +28,7 @@ def _get_summary(conversation:list[dict[str,str]]=None) -> str:
 def _get_request(summary:str) -> _Request:
     request = _Request(type_="CONVERSATION", data_="")
     
-    if "NO_SPECIFIC_REQUEST" in summary:
+    if "NO_SPECIFIC_TASK" in summary:
         request.type_ = "CONVERSATION"
     elif "Do this - " in summary:
         request.type_ = "FUNCTION"

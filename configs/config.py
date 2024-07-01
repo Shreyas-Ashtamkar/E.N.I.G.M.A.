@@ -71,7 +71,7 @@ AI = SimpleNamespace(
     summary = _AI(
         model  = "phi3",
         prompt = SYSTEM_PROMPT["SUMMARY"],
-        default_response = "NO_SPECIFIC_REQUEST",
+        default_response = "NO_SPECIFIC_TASK",
         response_tester = lambda resp: ("Do this -" in resp),
         options = {
             'temperature' : 1
