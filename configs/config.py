@@ -22,7 +22,21 @@ def show_toolbox(**kwargs):
 Tool.create(
     exec  = show_toolbox,
     fname = 'show_toolbox',
-    description = "List down the capabilities (the toolset) of this chatbot, in a user friendly way"
+    description = "Listing down the capabilities (the toolset) of this chatbot, in a user friendly way"
+)
+
+Tool.create(
+    exec  = hint_conversation,
+    fname = 'conversation',
+    description = "Responding with only the topic of the conversation.",
+    message = Tool.parameter(type_="string", description="A user-friendly message.")
+)
+
+Tool.create(
+    exec  = hint_error,
+    fname = 'error',
+    description = "Responding with an error, with an error message",
+    error_message = Tool.parameter(type_="string", description="A user-friendly message notifying the user of the error")
 )
 
 Tool.create(
@@ -47,20 +61,6 @@ Tool.create(
     prompt      = Tool.parameter(type_='string', description="The prompt provided by the user on basis of which the image will be created.")
 )
 
-Tool.create(
-    exec  = hint_conversation,
-    fname = 'conversation',
-    description = "Pass the conversation to another conversational AI",
-    message = Tool.parameter(type_="string", description="A user-friendly message.")
-)
-
-Tool.create(
-    exec  = hint_error,
-    fname = 'error',
-    description = "Pass the error message to be handled further",
-    error_message = Tool.parameter(type_="string", description="A user-friendly message notifying the user of the error")
-)
-
 
 AI = SimpleNamespace(
     conversation = _AI(
@@ -74,7 +74,7 @@ AI = SimpleNamespace(
         default_response = "NO_SPECIFIC_TASK",
         response_tester = lambda resp: ("Do this -" in resp),
         options = {
-            'temperature' : 1
+            'temperature' : 0
         }
     ),
     tool = _AI(
@@ -84,7 +84,7 @@ AI = SimpleNamespace(
         default_error    = """{"tool":"error", "tool_kwargs":"I don't have the ability to do that yet."}""",
         response_tester  = lambda resp: resp[0] == "{" and resp[-1] == "}",
         options = {
-            'temperature' : 1
+            'temperature' : 0
         }
     ),
     responder = _AI(

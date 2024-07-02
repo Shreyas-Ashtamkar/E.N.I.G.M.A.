@@ -2,6 +2,8 @@ import json
 
 def hint_conversation(**kwargs):
     print(f"CALLED: hint_conversation\nPASSED :{kwargs}")
+    if "message" in kwargs:
+        return kwargs['message']
     return f"Okay, let's talk."
 
 def hint_error(error_message, **kwargs):

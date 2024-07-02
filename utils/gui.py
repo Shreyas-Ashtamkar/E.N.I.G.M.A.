@@ -2,6 +2,13 @@ from types import FunctionType
 import streamlit as st
 from configs.config import print2, cls
 
+INITIAL_CHATS:list[dict[str,str]] = [
+    {
+        'role': "assistant",
+        'content': f"Hello I am Enigma. How may I help you?.",
+    }
+]
+
 def _ai(request:str):
     reply = "No AI set"
     return reply
@@ -19,11 +26,7 @@ def restart_chat():
 def init_chat():
     cls()
     print2("Called init_chat")
-    st.session_state["chat_history"] = [{
-        'role': "assistant",
-        # 'content': ollama_fetch_response(model="phi3", stream=False),
-        'content': f"Hello I am Enigma. How may I help you?.",
-    }]
+    st.session_state["chat_history"] = INITIAL_CHATS
     
     return st.session_state["chat_history"]
 
